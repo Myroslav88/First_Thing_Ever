@@ -1,7 +1,10 @@
-
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+driver.implicitly_wait(5)
+
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -9,20 +12,21 @@ from selenium.webdriver.common.action_chains import ActionChains
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
 
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
 driver.get("https://keplercode.com/")
 driver.maximize_window()
-drop_menu = driver.find_element(By.XPATH,"/html/body/div[2]/header/div[1]/div/div/nav/div/ul/li[1]/a/span[2]")
+drop_menu = driver.find_element(By.CSS_SELECTOR, "span[class*='avia-menu-text']")
 action_chains = ActionChains(driver)
 action_chains.move_to_element(drop_menu).perform()
 
-time.sleep(3)
 
-driver.find_element(By.XPATH, "/html/body/div[2]/header/div[1]/div/div/nav/div/ul/li[1]/ul/li[1]/a/span[2]").click()
-time.sleep(3)
-Title = driver.find_element(By.XPATH, "/html/body/div[2]/div/div[1]/div/div[2]/main/div/div/div[1]/div/h1").text
+driver.find_element(By.CSS_SELECTOR, "#menu-item-3237 > a:nth-child(1) > span:nth-child(2)").click()
+
+
+Title = driver.find_element(By.CSS_SELECTOR, "h1[class*=av-special-heading-tag").text
 Title1 = "About Us"
-if Title == Title1:
-    print("Test was successful.")
-else: print("Test failed.")
+
+
+assert Title == Title1, f"Test failed - {Title}"
+
+time.sleep(5)
